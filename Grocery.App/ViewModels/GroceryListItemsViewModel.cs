@@ -15,7 +15,7 @@ namespace Grocery.App.ViewModels
         private readonly IGroceryListItemsService _groceryListItemsService;
         private readonly IProductService _productService;
         private readonly IFileSaverService _fileSaverService;
-        
+
         public ObservableCollection<GroceryListItem> MyGroceryListItems { get; set; } = [];
         public ObservableCollection<Product> AvailableProducts { get; set; } = [];
 
@@ -50,6 +50,26 @@ namespace Grocery.App.ViewModels
         partial void OnGroceryListChanged(GroceryList value)
         {
             Load(value.Id);
+        }
+
+        [RelayCommand]
+        public void SearchProducts(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                GetAvailableProducts();
+            }
+            else
+            {
+                var filteredProducts = _productService.GetAll()
+                    .Where(p => p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) && p.Stock > 0)
+                    .Where(p => MyGroceryListItems.FirstOrDefault(g => g.ProductId == p.Id) == null);
+                AvailableProducts.Clear();
+                foreach (var product in filteredProducts)
+                {
+                    AvailableProducts.Add(product);
+                }
+            }
         }
 
         [RelayCommand]
