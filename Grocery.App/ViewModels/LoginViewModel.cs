@@ -59,6 +59,10 @@ namespace Grocery.App.ViewModels
                 LoginMessage = $"Account succesvol aangemaakt voor {newClient.Name}!";
                 // No navigation - stay on login page for testing
             }
+            if (newClient == null && _authService.UserExists(Email))
+            {
+                LoginMessage = "Email is al in gebruik.";
+            }
             else
             {
                 LoginMessage = "Registratie mislukt. Probeer opnieuw.";
