@@ -41,5 +41,28 @@ namespace Grocery.App.ViewModels
                 LoginMessage = "Ongeldige inloggegevens.";
             }
         }
+
+        [RelayCommand]
+        private void Register()
+        {
+            // Basic validation
+            if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+            {
+                LoginMessage = "Vul alle velden in.";
+                return;
+            }
+
+            // Attempt registration
+            Client? newClient = _authService.Register(Email, Password);
+            if (newClient != null)
+            {
+                LoginMessage = $"Account succesvol aangemaakt voor {newClient.Name}!";
+                // No navigation - stay on login page for testing
+            }
+            else
+            {
+                LoginMessage = "Registratie mislukt. Probeer opnieuw.";
+            }
+        }
     }
 }
