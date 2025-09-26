@@ -1,5 +1,4 @@
-﻿
-using Grocery.Core.Interfaces.Repositories;
+﻿using Grocery.Core.Interfaces.Repositories;
 using Grocery.Core.Models;
 
 namespace Grocery.Core.Data.Repositories
@@ -32,6 +31,17 @@ namespace Grocery.Core.Data.Repositories
         public List<Client> GetAll()
         {
             return clientList;
+        }
+
+        public void Add(Client client)
+        {
+            // Generate a new ID based on the highest existing ID
+            int newId = clientList.Count > 0 ? clientList.Max(c => c.Id) + 1 : 1;
+
+            // Create new client with generated ID
+            var newClient = new Client(newId, client.Name, client.EmailAddress, client.Password);
+
+            clientList.Add(newClient);
         }
     }
 }
